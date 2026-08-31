@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.DS_Store
+
+# Vitest browser mode writes these only when a test fails
+.vitest-attachments/
+**/__screenshots__/
+
+# Runtime record of the week's winners, written by the server
+data/state.json

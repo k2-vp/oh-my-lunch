@@ -1,0 +1,29 @@
+{
+  "name": "lunch-plinko",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "build": "npm run typecheck && vite build",
+    "dev": "node scripts/dev.ts",
+    "start": "node server/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@chenglou/pretext": "0.0.8",
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.3",
+    "@types/three": "0.185.0",
+    "@vitest/browser-playwright": "4.1.11",
+    "playwright": "1.62.1",
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "vitest": "4.1.11"
+  }
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f6fa" />
+    <title>Lunch Plinko: visual state harness (development only)</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: var(--board-ground, #f6f6fa);
+        color: var(--board-ink, #181737);
+      }
+      #app {
+        position: absolute;
+        inset: 0;
+      }
+      #harness-controls {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px;
+        font-family: monospace;
+        font-size: 13px;
+        background: var(--board-ground, #f6f6fa);
+      }
+      #harness-controls button {
+        font: inherit;
+        padding: 4px 8px;
+        cursor: pointer;
+      }
+      #harness-controls button[aria-pressed="true"] {
+        outline: 2px solid var(--board-ink, #181737);
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="harness-controls" aria-label="Visual state controls"></nav>
+    <main id="app" aria-label="Lunch Plinko visual state harness"></main>
+    <script type="module" src="/src/harness/harness.ts"></script>
+  </body>
+</html>

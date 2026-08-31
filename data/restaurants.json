@@ -1,0 +1,74 @@
+{
+  "restaurants": [
+    {
+      "name": "Golden Bowl"
+    },
+    {
+      "name": "Taco Cantina"
+    },
+    {
+      "name": "Cluck-n-Go"
+    },
+    {
+      "name": "Sub Station"
+    },
+    {
+      "name": "Noodle Co-op"
+    },
+    {
+      "name": "Hero House"
+    },
+    {
+      "name": "Daily Bread"
+    },
+    {
+      "name": "Pizza by the Slice"
+    },
+    {
+      "name": "Casa Verde"
+    },
+    {
+      "name": "Corner Deli"
+    },
+    {
+      "name": "Burger Barn"
+    },
+    {
+      "name": "Gyro Stop"
+    },
+    {
+      "name": "Kitchen Table"
+    },
+    {
+      "name": "Ten Minute Hand-Pulled Noodle House"
+    }
+  ],
+  "settings": {
+    "schedule": {
+      "time": "12:00",
+      "weekdays": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
+      ]
+    },
+    "mode": "auto",
+    "redropKey": "r",
+    "redropWindowSeconds": 90,
+    "theme": {
+      "lightGround": "#f6f6fa",
+      "darkGround": "#100f24",
+      "ball": "#181737",
+      "ink": "#181737",
+      "accent": "#1f9c5b",
+      "grey": "#bfc0c9",
+      "backgroundMark": {
+        "light": "/brand/k2-mark.png",
+        "dark": "/brand/k2-mark-knockout.png",
+        "opacity": 0.05
+      }
+    }
+  }
+}

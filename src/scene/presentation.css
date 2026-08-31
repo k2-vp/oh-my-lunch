@@ -1,0 +1,391 @@
+.board-presentation,
+.board-presentation * {
+  box-sizing: border-box;
+}
+
+.board-presentation {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--board-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  /* The 2D chrome borrows the ball's lighting model: shadows fall from a soft
+     light above, raised surfaces catch a sheen on their top edge. In dark mode
+     ink is near-white, so shadows switch to true black instead of ink. */
+  --shadow-ink: var(--board-ink);
+  --surface-sheen: color-mix(in srgb, #ffffff 60%, var(--board-surface));
+  --surface-highlight: rgba(255, 255, 255, 0.85);
+  --surface-ring: color-mix(in srgb, var(--board-ink) 9%, transparent);
+}
+
+.board-presentation[data-theme="dark"] {
+  --shadow-ink: #000000;
+  --surface-sheen: color-mix(in srgb, #ffffff 6%, var(--board-surface));
+  --surface-highlight: rgba(255, 255, 255, 0.08);
+  --surface-ring: color-mix(in srgb, #ffffff 11%, transparent);
+}
+
+/* Ambient light over the flat canvas ground: a clear center and gently darker
+   edges, the same soft room light the environment map gives the ball. */
+.board-presentation::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    140% 110% at 50% 26%,
+    transparent 56%,
+    color-mix(in srgb, var(--shadow-ink) 7%, transparent) 100%
+  );
+}
+
+.board-presentation[data-theme="dark"]::before {
+  background:
+    radial-gradient(
+      90% 55% at 50% 0%,
+      color-mix(in srgb, #ffffff 5%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      140% 110% at 50% 26%,
+      transparent 52%,
+      color-mix(in srgb, #000000 34%, transparent) 100%
+    );
+}
+
+.board-presentation [hidden] {
+  display: none !important;
+}
+
+.board-countdown {
+  transform: translateY(-50%);
+  position: absolute;
+  display: grid;
+  justify-items: start;
+  row-gap: 0.55em;
+  line-height: 1;
+  text-transform: uppercase;
+  padding-left: 0.9em;
+  border-left: max(2px, 0.05em) solid var(--board-accent);
+  /* The accent bar fades out toward its foot, like a lit edge. */
+  border-image: linear-gradient(
+      180deg,
+      var(--board-accent) 55%,
+      color-mix(in srgb, var(--board-accent) 25%, transparent)
+    )
+    1;
+}
+
+.board-countdown-label,
+.board-countdown-unit,
+.board-phase,
+.board-winner-kicker,
+.board-winner-actions {
+  font-size: var(--small-type);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.board-countdown-value {
+  margin-block: 0.04em 0;
+  min-width: 2ch;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--countdown-type);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+
+.board-phase {
+  position: absolute;
+  color: var(--board-muted-ink);
+  line-height: 1.4;
+  text-align: right;
+}
+
+.board-tallies {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.board-tally {
+  position: absolute;
+  min-width: 0.8em;
+  padding-bottom: 0.16em;
+  transform: translate(-50%, -50%);
+  border-bottom: max(2px, 0.04em) solid transparent;
+  font-size: var(--tally-type);
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+}
+
+.board-tally.is-tied {
+  border-bottom-color: var(--board-ink);
+}
+
+.board-lane-names {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.board-lane-name {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--lane-name-type);
+  font-weight: 500;
+  text-align: center;
+  white-space: pre;
+  color: var(--board-ink);
+  transition: opacity 300ms ease;
+}
+
+.board-lane-name.is-spent,
+.board-lane-name.is-retired {
+  opacity: 0.32;
+}
+
+.board-baseline {
+  position: absolute;
+  height: 1px;
+  background: color-mix(in srgb, var(--board-ink) 18%, transparent);
+  /* The board casts a soft shadow onto the ground below it, the way the ball
+     casts one onto the backboard. This seats the lane row instead of leaving
+     it floating on a flat field. */
+  box-shadow: 0 10px 22px -8px color-mix(in srgb, var(--shadow-ink) 26%, transparent);
+}
+
+.board-title {
+  position: absolute;
+}
+
+.board-title-name {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: calc(var(--small-type) * 1.7);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--board-ink);
+}
+
+.board-title-sub {
+  margin: 0 0 0.55em;
+  font-size: calc(var(--small-type) * 0.85);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--board-muted-ink);
+}
+
+.board-week {
+  position: absolute;
+  transform: translateY(-50%);
+  padding: calc(var(--small-type) * 1.15) calc(var(--small-type) * 1.3)
+    calc(var(--small-type) * 1.3);
+}
+
+.board-week-heading {
+  margin: 0 0 0.9em;
+  padding-bottom: 0.7em;
+  border-bottom: 1px solid color-mix(in srgb, var(--board-ink) 14%, transparent);
+  font-size: calc(var(--small-type) * 0.85);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--board-muted-ink);
+}
+
+.board-week-list {
+  display: grid;
+  row-gap: 0.65em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--small-type);
+}
+
+.board-week-day {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1em;
+  color: var(--board-ink);
+}
+
+.board-week-day-label {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--board-muted-ink);
+}
+
+.board-week-day.is-today .board-week-day-label {
+  color: var(--board-accent);
+}
+
+.board-week-day-name.is-empty {
+  color: color-mix(in srgb, var(--board-muted-ink) 55%, transparent);
+}
+
+.board-footer {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.6em;
+  font-size: calc(var(--small-type) * 0.85);
+  letter-spacing: 0.08em;
+}
+
+.board-footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  color: var(--board-muted-ink);
+  text-decoration: none;
+  pointer-events: auto;
+  transition: color 160ms ease;
+}
+
+.board-footer-link:hover {
+  color: var(--board-ink);
+}
+
+.board-footer-link svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.board-winner-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: color-mix(in srgb, var(--board-ground) 35%, transparent);
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+}
+
+/* Raised surfaces share one material: lit from above (a sheen fading into the
+   surface tone), a bright top edge, a hairline ring, and a layered soft
+   shadow — the clearcoat treatment, in CSS. */
+.board-winner-modal,
+.board-week {
+  border-radius: calc(var(--small-type) * 0.6);
+  background: linear-gradient(180deg, var(--surface-sheen), var(--board-surface) 52%);
+  box-shadow:
+    inset 0 1px 0 var(--surface-highlight),
+    0 0 0 1px var(--surface-ring),
+    0 0.12em 0.35em color-mix(in srgb, var(--shadow-ink) 7%, transparent),
+    0 1.4em 3em -1em color-mix(in srgb, var(--shadow-ink) 35%, transparent);
+}
+
+.board-winner-modal {
+  position: absolute;
+  transform: translateY(-50%);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.board-winner-kicker {
+  margin: 0;
+  color: var(--board-muted-ink);
+  text-transform: uppercase;
+}
+
+.board-winner-name {
+  align-self: center;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--reveal-type);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.board-winner-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--action-gap);
+  margin: 0;
+  color: var(--board-muted-ink);
+}
+
+.board-winner-settled {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+  color: var(--board-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+}
+
+.board-winner-settled svg {
+  width: 1em;
+  height: 1em;
+}
+
+.board-key-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  white-space: nowrap;
+}
+
+.board-key-action kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--board-ink) 22%, transparent);
+  border-bottom-width: 2px;
+  border-radius: 0.3em;
+  background:
+    linear-gradient(180deg, var(--surface-highlight), transparent 55%),
+    color-mix(in srgb, var(--board-ink) 5%, transparent);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--shadow-ink) 12%, transparent);
+  color: var(--board-ink);
+  font: inherit;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.board-key-action.is-confirm kbd {
+  border-color: color-mix(in srgb, var(--board-accent) 45%, transparent);
+  color: var(--board-accent);
+}
+
+.board-message {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--reveal-type);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  text-align: center;
+}
+
+.board-celebration {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.board-winner-modal {
+  z-index: 3;
+}
